@@ -11,6 +11,7 @@
         tree
         dropbox
         google-drive
+        sync
         nmap
         zenmap
         spotify
@@ -130,6 +131,15 @@ clear
 
 # Optional Packages
 
+echo -n "${RED}Install Firefox? ${NC}[y/N]"
+read REPLY
+echo   
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+  brew install firefox
+    fi
+clear
+
 echo -n "${RED}Install Figma? ${NC}[y/N]"
 read REPLY
 echo   
@@ -199,6 +209,15 @@ if [[ $REPLY =~ ^[Yy]$ ]]
 then
   brew install transmission
   brew install --cask transmission
+    fi
+clear
+
+echo -n "${RED}Install Balena Etcher? ${NC}[y/N]"
+read REPLY
+echo   
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+  brew install balenaetcher
     fi
 clear
 
