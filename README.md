@@ -1,12 +1,15 @@
 # install.sh
 zsh
 
+mbp 14 2021
 
 Fresh Install Script for macOS
 
 Personal script for essential apps and configuration after a fresh install of macOS.
 
-Only tested on macOS Monterey. Database install not tested.
+To do:
+Create brewfile instead.
+MAS.
 
 Will be adding configuration and package changes for personal taste.
 
