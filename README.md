@@ -1,4 +1,7 @@
 # install.sh
+
+mbp mid-2012
+
 zsh
 
 
