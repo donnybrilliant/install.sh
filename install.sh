@@ -22,10 +22,10 @@
         cheatsheet
         git
         github
-        beardedspice
         postman
         discord
         figlet
+        silicon
 )
 
 # NPM PACKAGES 
