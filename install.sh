@@ -26,6 +26,7 @@
         discord
         figlet
         silicon
+        cyberduck
 )
 
 # NPM PACKAGES 
