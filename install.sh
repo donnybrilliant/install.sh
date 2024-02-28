@@ -24,19 +24,22 @@
         github
         postman
         discord
-        figlet
         silicon
         cyberduck
+        microsoft-teams
+        qflipper
+        devtoys
+        tiled
+        arc
+        pieces
+        ollama
 )
 
 # NPM PACKAGES 
 
 
       NPMPACKAGES=(
-        morgan
         express
-        babel
-        vue@next
       )
 
 
@@ -101,7 +104,7 @@ echo -n "${RED}Install Node via NVM or Brew? ${NC}[N/b]"
     then
       echo "${GREEN}Installing NVM..."
       echo
-          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+         curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 
 
     export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
@@ -132,12 +135,21 @@ clear
 
 # Optional Packages
 
-echo -n "${RED}Install Firefox? ${NC}[y/N]"
+echo -n "${RED}Install .NET? ${NC}[y/N]"
 read REPLY
 echo   
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
-  brew install firefox
+  brew install dotnet
+    fi
+clear
+
+echo -n "${RED}Install Firefox Developer? ${NC}[y/N]"
+read REPLY
+echo   
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+  brew install firefox-developer-edition
     fi
 clear
 
@@ -150,7 +162,7 @@ then
     fi
 clear
 
-echo -n "${RED}Install Netlify? ${NC}[y/N]"
+echo -n "${RED}Install Netlify CLI? ${NC}[y/N]"
 read REPLY
 echo   
 if [[ $REPLY =~ ^[Yy]$ ]]
@@ -184,12 +196,12 @@ then
     fi
 clear
 
-echo -n "${RED}Install Unity? ${NC}[y/N]"
+echo -n "${RED}Install Unity Hub? ${NC}[y/N]"
 read REPLY
 echo   
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
-  brew install unity
+  brew install unity-hub
     fi
 clear
 
@@ -226,8 +238,9 @@ clear
 echo "${GREEN}Cleaning up..."
 echo
 brew update && brew upgrade && brew cleanup && brew doctor
+brew tap homebrew/autoupdate
+brew autoupdate start 86400 --upgrade --cleanup --immediate --sudo
 clear
-
 
 # Settings
 echo "${GREEN}Configuring default settings..."
@@ -246,7 +259,7 @@ clear
 
 # Git Login
 
-figlet "GIT LOGIN"
+echo "${GREEN}GIT LOGIN"
 echo
 echo
 
@@ -259,8 +272,7 @@ git config --global user.name "$name"
 git config --global user.email "$email"
 git config --global color.ui true
 
-printf "${GREEN}"
-figlet "GITTY UP"
+printf "${GREEN}GITTY UP!"
 clear
 
 # ohmyzsh
@@ -268,11 +280,19 @@ echo "${GREEN}Installing ohmyzsh!"
 echo
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 clear
-printf "${GREEN}"
-figlet "DONE"
+echo "${GREEN}DONE!"
 echo
 echo
 printf "${RED}"
 read -s -k $'?Press ANY KEY to REBOOT\n'
 sudo reboot
 exit
+
+
+
+
+
+
+
+
+
