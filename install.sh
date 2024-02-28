@@ -33,6 +33,7 @@
         arc
         pieces
         ollama
+        arduino-ide
 )
 
 # NPM PACKAGES 
