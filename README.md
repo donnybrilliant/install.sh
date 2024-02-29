@@ -45,7 +45,3 @@ It is what i need for my MBP M1.
 This script aims to be as universal and flexible as possible, and contributions are welcome to help achieve this goal. If you have suggestions for additional software to include, improvements to the script, or any other enhancements, please feel free to open an issue or submit a pull request.
 
 Enjoy a hassle-free setup of your Mac with this script. Make it your own, contribute to its development, and share it with others who might find it useful. Happy coding!
-
-```
-
-```
