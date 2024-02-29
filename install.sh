@@ -207,13 +207,6 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
   brew install --cask transmission
 fi
 
-echo
-echo -n "${RED}Install Balena Etcher? ${NC}[y/N]"
-read REPLY
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-  brew install balenaetcher
-fi
-
 # Cleanup
 echo
 echo "${GREEN}Cleaning up..."
@@ -224,7 +217,7 @@ brew autoupdate start 86400 --upgrade --cleanup --immediate --sudo
 
 # Settings
 echo
-echo -n "${RED}Configure default settings? ${NC}[y/N]"
+echo -n "${RED}Configure default system settings? ${NC}[y/N]"
 read REPLY
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   echo "${GREEN}Configuring default settings..."
