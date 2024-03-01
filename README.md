@@ -1,51 +1,65 @@
 # install.sh
 
-Script for installing essential apps and configuration after a fresh install of macOS.
-
-Are you tired of setting up your Mac from scratch after a format? Do you dread the thought of manually installing all your favorite software and tools? Look no further! This Mac setup script is designed to automate the process, saving you time and effort.
+Welcome to the ultimate macOS setup script! Are you tired of the tedious process of setting up your Mac from scratch after a fresh install or format? This script is designed to automate the installation of essential apps and configurations, saving you time and effort.
 
 ## Features
 
-- Automated installation of your favorite software and tools
-- Customizable configuration file to tailor the setup to your needs
-- No external dependencies
+- **Automated Installation:** Say goodbye to manually installing your favorite software and tools. This script automates the process, making your setup hassle-free.
+- **Customizable Configuration:** Tailor the setup to your needs with a customizable configuration file. Choose the software and settings you want with ease.
+- **Comprehensive Setup:** From updating macOS, installing Homebrew and essential software, to configuring system preferences and Dock settings, this script covers all bases to get your macOS ready for use.
+- **No External Dependencies:** The script runs without the need for any external dependencies, ensuring a smooth setup process.
 
-## Usage
+## What Does It Do?
 
-Clone this repository to your local machine.
-Modify CASKS, FORMULAE & NPMPACKAGES in the install.sh file to select the software you want to install.
-Run the install.sh script in your terminal:
+The script performs a variety of tasks to prepare a macOS machine for use:
+
+- Updates macOS to the latest version.
+- Installs Homebrew, the package manager for macOS.
+- Installs essential software and applications through Homebrew casks and formulae.
+- Offers the choice between installing Node.js via NVM (Node Version Manager) or Homebrew.
+- Installs global NPM packages.
+- Provides options to install additional software, such as .NET, Firefox Developer Edition, PostgreSQL, MySQL, MongoDB, Epic & Steam, Unity Hub, and Figma.
+- Cleans up the installation environment by running `brew cleanup` and other maintenance commands.
+- Sets up Git with global username and email configurations.
+- Installs VSCode extensions.
+- Installs selected apps from the App Store using `mas` (Mac App Store command-line interface).
+- Installs and configures ohmyzsh for a better terminal experience.
+- Applies custom system settings and Dock configurations to optimize the user experience.
+- Automatically updates Homebrew installed packages with a specified frequency.
+
+## Getting Started
+
+1. **Clone this repository** to your local machine.
+2. **Modify `config` file:**
+
+- Adjust `CASKS`, `FORMULAE`, `NPMPACKAGES`, `VSCODE`, and `APPSTORE` sections to select the software you wish to install.
+- Change the `SETTINGS` to choose system settings or `DOCK-*` to choose dock setup.
+
+3. **Run the Script:** Open Terminal, navigate to the cloned directory, and execute:
 
 ```
 ./install.sh
 ```
 
-## Acknowledgements
+Follow any on-screen prompts to customize your installation further.
 
-This setup for configuration is too personal and not flexible enough.
-Especially the dock settings and the system settings.
-It is what i need for my MBP M1.
+## To Do and Feature Ideas
 
-### To do:
-
-- Create universal config file
-- Create brewfile instead?
-- Change prompts - they are too random now.
-- Game dev package, web dev package etc as prompts instead?
-
-### Feature ideas:
-
-- Checklist (TUI)
-- ASCII Graphics over install
-- VSCode, Transmission settings etc
-- Log out of FaceTime/Messages
+- **Brewfile Integration:** Add option to use Brewfile if one is present.
+- **Improve Prompts:** Refine the prompts for a more intuitive setup experience.
+- **Specialized Packages:** Add options for game development, web development packages, etc.
+- **Configuration files:** Settings for Apps, Workflows etc.
+- **Enhanced User Experience:** Incorporate a checklist (TUI), ASCII graphics during installation.
+- **Others:** Include options to log out of FaceTime/Messages automatically.
 
 ## Contributing
 
-This script aims to be as universal and flexible as possible, and contributions are welcome to help achieve this goal. If you have suggestions for additional software to include, improvements to the script, or any other enhancements, please feel free to open an issue or submit a pull request.
+Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-Enjoy a hassle-free setup of your Mac with this script. Make it your own, contribute to its development, and share it with others who might find it useful. Happy coding!
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with suggestions.
 
-```
+Don't forget to give the project a star! Thanks again!
 
-```
+## Acknowledgements
+
+- This script is built by someone tired of the manual setup process and hopes it helps others streamline their macOS setup.

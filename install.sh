@@ -1,58 +1,24 @@
 #!/bin/zsh
+# ==============================================================================
+# Title: install.sh
+# Author: Daniel Vier
+# Email: daniel.vier@gmail.com
+# Description: Automates the setup and configuration of macOS, including
+#              installation of essential applications and system preferences.
+# Last Updated: March 1, 2024
+# ==============================================================================
 
-# ESSENTIAL PACKAGES
-
-CASKS=(
-  iterm2
-  google-chrome
-  arc
-  visual-studio-code
-  spotify
-  vlc
-  dropbox
-  google-drive
-  sync
-  github
-  cyberduck
-  postman
-  discord
-  microsoft-teams
-  silicon
-  qflipper
-  pieces
-  ollama
-  devtoys
-  the-unarchiver
-  cheatsheet
-  zenmap
-  tiled
-  arduino-ide
-
-)
-
-FORMULAE=(
-  speedtest-cli
-  tree
-  nmap
-  wget
-  git
-  pinentry-mac
-)
-
-# NPM PACKAGES
-
-NPMPACKAGES=(
-  express
-)
+source ./config
 
 # COLOR
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
 
-###########################################
-# Start
-##########################################
+#########
+# Start #
+#########
+
 clear
 echo " _           _        _ _       _     "
 echo "(_)         | |      | | |     | |    "
@@ -67,20 +33,20 @@ echo Enter root password
 # Ask for the administrator password upfront.
 sudo -v
 
-# Keep Sudo Until Script is finished
+# Keep Sudo until script is finished
 while true; do
   sudo -n true
   sleep 60
   kill -0 "$$" || exit
 done 2>/dev/null &
 
-# Update macOS // is sudo needed?
+# Update macOS
 echo
 echo "${GREEN}Looking for updates.."
 echo
 sudo softwareupdate -i -a
 
-# Homebrew
+# Install Homebrew
 echo
 echo "${GREEN}Installing Homebrew"
 echo
@@ -91,13 +57,14 @@ echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >>${HOME}/.zprofile
 # Immediately evaluate the Homebrew environment settings for the current session
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# Update, upgrade and clean
+# Check installation and update
 echo
-echo "${GREEN}Cleaning up.."
+echo "${GREEN}Checking installation.."
 echo
-brew update && brew upgrade && brew cleanup && brew doctor
+brew update && brew doctor
+export HOMEBREW_NO_INSTALL_CLEANUP=1
 
-# Install essentials
+# Install Casks and Formulae
 echo
 echo "${GREEN}Installing formulae..."
 brew install ${FORMULAE[@]}
@@ -105,16 +72,17 @@ echo
 echo "${GREEN}Installing casks..."
 brew install --cask ${CASKS[@]}
 
-# Install Node
+# Install Node.js
 echo
-echo -n "${RED}Install Node via NVM or Brew? ${NC}[N/b]"
+echo -n "${RED}Install Node.js via NVM or Brew? ${NC}[N/b]"
 read REPLY
-if [[ $REPLY =~ ^[Nn]$ ]]; then
+if [[ -z $REPLY || $REPLY =~ ^[Nn]$ ]]; then
   echo "${GREEN}Installing NVM..."
   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 
+  # Loads NVM
   export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
   echo "${GREEN}Installing Node via NVM..."
   nvm install --lts
@@ -129,6 +97,7 @@ if [[ $REPLY =~ ^[Bb]$ ]]; then
 
 fi
 
+# Install NPM Packages
 echo
 echo "${GREEN}Installing Global NPM Packages..."
 npm install -g ${NPMPACKAGES[@]}
@@ -143,7 +112,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 fi
 
 echo
-echo -n "${RED}Install Firefox Developer? ${NC}[y/N]"
+echo -n "${RED}Install Firefox Developer Edition? ${NC}[y/N]"
 read REPLY
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   brew tap homebrew/cask-versions
@@ -151,29 +120,22 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 fi
 
 echo
-echo -n "${RED}Install Figma? ${NC}[y/N]"
+echo -n "${RED}Install PosreSQL, MySQL & MongoDB? ${NC}[y/N]"
 read REPLY
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-  brew install figma
-fi
-
-echo
-echo -n "${RED}Install Netlify CLI? ${NC}[y/N]"
-read REPLY
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-  brew install netlify-cli
-fi
-
-echo
-echo -n "${RED}Install Databases? ${NC}[y/N]"
-read REPLY
-if [[ $REPLY =~ ^[Yy]$ ]]; then
+  # Postgres
   brew install postgresql
-
+  # MySQL
   brew install mysql
-  brew services restart mysql
-  mysql_secure_installation
-
+  echo -n "${RED}Set up MySQL now? ${NC}[y/N]"
+  read REPLY
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    echo "${GREEN}Starting MySQL..."
+    brew services start mysql
+    sleep 2
+    mysql_secure_installation
+  fi
+  # MongoDB
   brew tap mongodb/brew
   brew install mongodb-community
 fi
@@ -193,18 +155,10 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 fi
 
 echo
-echo -n "${RED}Install Binance? ${NC}[y/N]"
+echo -n "${RED}Install Figma? ${NC}[y/N]"
 read REPLY
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-  brew install binance
-fi
-
-echo
-echo -n "${RED}Install Transmission? ${NC}[y/N]"
-read REPLY
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-  brew install transmission
-  brew install --cask transmission
+  brew install figma
 fi
 
 # Cleanup
@@ -213,55 +167,43 @@ echo "${GREEN}Cleaning up..."
 brew update && brew upgrade && brew cleanup && brew doctor
 mkdir -p /Users/daniel/Library/LaunchAgents
 brew tap homebrew/autoupdate
-brew autoupdate start 86400 --upgrade --cleanup --immediate --sudo
+brew autoupdate start $HOMEBREW_UPDATE_FREQUENCY --upgrade --cleanup --immediate --sudo
 
 # Settings
 echo
-echo -n "${RED}Configure default system settings? ${NC}[y/N]"
+echo -n "${RED}Configure default system settings? ${NC}[Y/n]"
 read REPLY
-if [[ $REPLY =~ ^[Yy]$ ]]; then
+if [[ -z $REPLY || $REPLY =~ ^[Yy]$ ]]; then
   echo "${GREEN}Configuring default settings..."
-  defaults write -g com.apple.mouse.scaling 3
-  defaults write -g com.apple.trackpad.scaling 3
-  defaults write com.apple.driver.AppleBluetoothMultitouch.mouse MouseButtonMode TwoButton
-  defaults write com.apple.AppleMultitouchMouse.plist MouseButtonMode TwoButton
-  defaults write -g AppleShowAllExtensions -bool true
-  defaults write com.apple.finder AppleShowAllFiles true
-  defaults write com.apple.finder ShowPathbar -bool true
-  defaults write com.apple.finder ShowStatusBar -bool true
-  defaults write com.apple.finder NewWindowTarget PfHm
-  defaults write com.apple.Finder FXPreferredViewStyle Nlsv
-  defaults write com.apple.finder _FXSortFoldersFirst -bool true
-  chflags nohidden ~/Library
+  for setting in "${SETTINGS[@]}"; do
+    eval $setting
+  done
 fi
 
 # Dock settings
-## Very little flexible.. Based on language.. And all fails if one fails..
 echo
 echo -n "${RED}Apply Dock settings?? ${NC}[y/N]"
 read REPLY
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-  dockutil --add /Applications/Google\ Chrome.app --replacing 'Safari' &&
-    dockutil --add /Applications/iTerm.app &&
-    dockutil --add /Applications/Visual\ Studio\ Code.app &&
-    dockutil --add /Applications/GitHub\ Desktop.app &&
-    dockutil --add /Applications/Spotify.app &&
-    dockutil --add /Applications/Discord.app &&
-    dockutil --add /Applications/Microsoft\ Teams\ \(work\ or\ school\).app &&
-    dockutil --remove 'Meldinger' &&
-    dockutil --remove 'Kart' &&
-    dockutil --remove 'Bilder' &&
-    dockutil --remove 'Påminnelser' &&
-    dockutil --remove 'FaceTime' &&
-    dockutil --remove 'Kontakter' &&
-    dockutil --remove 'TV' &&
-    dockutil --remove 'Musikk' &&
-    dockutil --remove 'Mail'
+  brew install dockutil
+  # Handle replacements
+  for item in "${DOCK_REPLACE[@]}"; do
+    IFS="|" read -r add_app replace_app <<<"$item"
+    dockutil --add "$add_app" --replacing "$replace_app" &>/dev/null
+  done
+  # Handle additions
+  for app in "${DOCK_ADD[@]}"; do
+    dockutil --add "$app" &>/dev/null
+  done
+  # Handle removals
+  for app in "${DOCK_REMOVE[@]}"; do
+    dockutil --remove "$app" &>/dev/null
+  done
 fi
 
 # Git Login
 echo
-echo "${GREEN}GIT LOGIN"
+echo "${GREEN}SET UP GIT"
 echo
 
 echo "${RED}Please enter your git username:${NC}"
@@ -281,32 +223,21 @@ echo
 echo -n "${RED}Install VSCode Extensions? ${NC}[y/N]"
 read REPLY
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-  code --install-extension esbenp.prettier-vscode
-  code --install-extension GitHub.copilot
-  code --install-extension dsznajder.es7-react-js-snippets
-  code --install-extension ritwickdey.liveserver
-  code --install-extension github.vscode-pull-request-github
-  code --install-extension sourcegraph.cody-ai
-  code --install-extension eamodio.gitlens
-  code --install-extension meshintelligenttechnologiesinc.pieces-vscode
-#auto rename
-#auto closE?
-#color brackets
-#html?
-#typescript?
-#typescript react?
-#other intellisenses?
+  # Install VS Code extensions from config.sh file
+  for extension in "${VSCODE[@]}"; do
+    code --install-extension "$extension"
+  done
 fi
 
-# MAS
+# App Store
 echo
-echo -n "${RED}Do you want to install Pages, Numbers & Trello from App Store? ${NC}[y/N]"
+echo -n "${RED}Install apps from App Store? ${NC}[y/N]"
 read REPLY
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   brew install mas
-  mas install 409201541
-  mas install 409203825
-  mas install 1278508951
+  for app in "${APPSTORE[@]}"; do
+    eval "mas install $app"
+  done
 fi
 
 # ohmyzsh
