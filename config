@@ -1,0 +1,113 @@
+#CONFIGURATION
+
+CASKS=(
+  iterm2
+  google-chrome
+  arc
+  visual-studio-code
+  spotify
+  vlc
+  dropbox
+  google-drive
+  sync
+  github
+  cyberduck
+  postman
+  discord
+  microsoft-teams
+  silicon
+  qflipper
+  pieces
+  ollama
+  devtoys
+  the-unarchiver
+  cheatsheet
+  zenmap
+  tiled
+  arduino-ide
+)
+
+FORMULAE=(
+  speedtest-cli
+  tree
+  nmap
+  wget
+  git
+  pinentry-mac
+)
+
+NPMPACKAGES=(
+  express
+)
+
+VSCODE=(
+  "esbenp.prettier-vscode"
+  "GitHub.copilot"
+  "dsznajder.es7-react-js-snippets"
+  "ritwickdey.liveserver"
+  "github.vscode-pull-request-github"
+  "sourcegraph.cody-ai"
+  "eamodio.gitlens"
+  "meshintelligenttechnologiesinc.pieces-vscode"
+  #auto rename
+  #auto closE?
+  #color brackets
+  #html?
+  #typescript?
+  #typescript react?
+  #other intellisenses?
+)
+
+APPSTORE=(
+  409201541  # Pages
+  409203825  # Numbers
+  1278508951 # Trello
+)
+
+SETTINGS=(
+  # Sets the mouse speed to 3
+  "defaults write -g com.apple.mouse.scaling 3"
+  # Sets the trackpad speed to 3
+  "defaults write -g com.apple.trackpad.scaling 3"
+  # Sets the Bluetooth mouse to two-button mode
+  "defaults write com.apple.driver.AppleBluetoothMultitouch.mouse MouseButtonMode TwoButton"
+  # Sets the multi-touch mouse to two-button mode
+  "defaults write com.apple.AppleMultitouchMouse.plist MouseButtonMode TwoButton"
+  # Shows all file extensions in Finder
+  "defaults write -g AppleShowAllExtensions -bool true"
+  # Shows hidden files in Finder
+  "defaults write com.apple.finder AppleShowAllFiles true"
+  # Shows the path bar in Finder
+  "defaults write com.apple.finder ShowPathbar -bool true"
+  # Shows the status bar in Finder
+  "defaults write com.apple.finder ShowStatusBar -bool true"
+  # Makes new Finder windows open in the home directory
+  "defaults write com.apple.finder NewWindowTarget PfHm"
+  # Sets the preferred view style in Finder to list view
+  "defaults write com.apple.Finder FXPreferredViewStyle Nlsv"
+  # Makes Finder sort folders before files
+  "defaults write com.apple.finder _FXSortFoldersFirst -bool true"
+  # Makes the Library folder visible in Finder
+  "chflags nohidden ~/Library"
+)
+
+DOCK=(
+  "--add /Applications/Google\ Chrome.app --replacing 'Safari' &&"
+  "--add /Applications/iTerm.app &&"
+  "--add /Applications/Visual\ Studio\ Code.app &&"
+  "--add /Applications/GitHub\ Desktop.app &&"
+  "--add /Applications/Spotify.app &&"
+  "--add /Applications/Discord.app &&"
+  "--add /Applications/Microsoft\ Teams\ \(work\ or\ school\).app &&"
+  "--remove 'Meldinger' &&"
+  "--remove 'Kart' &&"
+  "--remove 'Bilder' &&"
+  "--remove 'Påminnelser' &&"
+  "--remove 'FaceTime' &&"
+  "--remove 'Kontakter' &&"
+  "--remove 'TV' &&"
+  "--remove 'Musikk' &&"
+  "--remove 'Mail'"
+)
+
+HOMEBREW_UPDATE_FREQUENCY=86400

@@ -1,49 +1,6 @@
 #!/bin/zsh
 
-# ESSENTIAL PACKAGES
-
-CASKS=(
-  iterm2
-  google-chrome
-  arc
-  visual-studio-code
-  spotify
-  vlc
-  dropbox
-  google-drive
-  sync
-  github
-  cyberduck
-  postman
-  discord
-  microsoft-teams
-  silicon
-  qflipper
-  pieces
-  ollama
-  devtoys
-  the-unarchiver
-  cheatsheet
-  zenmap
-  tiled
-  arduino-ide
-
-)
-
-FORMULAE=(
-  speedtest-cli
-  tree
-  nmap
-  wget
-  git
-  pinentry-mac
-)
-
-# NPM PACKAGES
-
-NPMPACKAGES=(
-  express
-)
+source ./config
 
 # COLOR
 RED='\033[0;31m'
@@ -74,7 +31,7 @@ while true; do
   kill -0 "$$" || exit
 done 2>/dev/null &
 
-# Update macOS // is sudo needed?
+# Update macOS
 echo
 echo "${GREEN}Looking for updates.."
 echo
@@ -113,8 +70,9 @@ if [[ $REPLY =~ ^[Nn]$ ]]; then
   echo "${GREEN}Installing NVM..."
   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 
+  # Loads NVM
   export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
   echo "${GREEN}Installing Node via NVM..."
   nvm install --lts
@@ -143,25 +101,11 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 fi
 
 echo
-echo -n "${RED}Install Firefox Developer? ${NC}[y/N]"
+echo -n "${RED}Install Firefox Developer Edition? ${NC}[y/N]"
 read REPLY
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   brew tap homebrew/cask-versions
   brew install firefox-developer-edition
-fi
-
-echo
-echo -n "${RED}Install Figma? ${NC}[y/N]"
-read REPLY
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-  brew install figma
-fi
-
-echo
-echo -n "${RED}Install Netlify CLI? ${NC}[y/N]"
-read REPLY
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-  brew install netlify-cli
 fi
 
 echo
@@ -192,71 +136,35 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
   brew install unity-hub
 fi
 
-echo
-echo -n "${RED}Install Binance? ${NC}[y/N]"
-read REPLY
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-  brew install binance
-fi
-
-echo
-echo -n "${RED}Install Transmission? ${NC}[y/N]"
-read REPLY
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-  brew install transmission
-  brew install --cask transmission
-fi
-
 # Cleanup
 echo
 echo "${GREEN}Cleaning up..."
 brew update && brew upgrade && brew cleanup && brew doctor
 mkdir -p /Users/daniel/Library/LaunchAgents
 brew tap homebrew/autoupdate
-brew autoupdate start 86400 --upgrade --cleanup --immediate --sudo
+brew autoupdate start $HOMEBREW_UPDATE_FREQUENCY --upgrade --cleanup --immediate --sudo
 
 # Settings
 echo
-echo -n "${RED}Configure default system settings? ${NC}[y/N]"
+echo -n "${RED}Configure default system settings? ${NC}[Y/n]"
 read REPLY
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   echo "${GREEN}Configuring default settings..."
-  defaults write -g com.apple.mouse.scaling 3
-  defaults write -g com.apple.trackpad.scaling 3
-  defaults write com.apple.driver.AppleBluetoothMultitouch.mouse MouseButtonMode TwoButton
-  defaults write com.apple.AppleMultitouchMouse.plist MouseButtonMode TwoButton
-  defaults write -g AppleShowAllExtensions -bool true
-  defaults write com.apple.finder AppleShowAllFiles true
-  defaults write com.apple.finder ShowPathbar -bool true
-  defaults write com.apple.finder ShowStatusBar -bool true
-  defaults write com.apple.finder NewWindowTarget PfHm
-  defaults write com.apple.Finder FXPreferredViewStyle Nlsv
-  defaults write com.apple.finder _FXSortFoldersFirst -bool true
-  chflags nohidden ~/Library
+  # Apply settings from config.sh file
+  for setting in "${SETTINGS[@]}"; do
+    eval $setting
+  done
 fi
 
 # Dock settings
-## Very little flexible.. Based on language.. And all fails if one fails..
 echo
 echo -n "${RED}Apply Dock settings?? ${NC}[y/N]"
 read REPLY
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-  dockutil --add /Applications/Google\ Chrome.app --replacing 'Safari' &&
-    dockutil --add /Applications/iTerm.app &&
-    dockutil --add /Applications/Visual\ Studio\ Code.app &&
-    dockutil --add /Applications/GitHub\ Desktop.app &&
-    dockutil --add /Applications/Spotify.app &&
-    dockutil --add /Applications/Discord.app &&
-    dockutil --add /Applications/Microsoft\ Teams\ \(work\ or\ school\).app &&
-    dockutil --remove 'Meldinger' &&
-    dockutil --remove 'Kart' &&
-    dockutil --remove 'Bilder' &&
-    dockutil --remove 'Påminnelser' &&
-    dockutil --remove 'FaceTime' &&
-    dockutil --remove 'Kontakter' &&
-    dockutil --remove 'TV' &&
-    dockutil --remove 'Musikk' &&
-    dockutil --remove 'Mail'
+  # Apply dock settings from config.sh file
+  for app in "${DOCK[@]}"; do
+    eval "dockutil --add $app"
+  done
 fi
 
 # Git Login
@@ -281,32 +189,21 @@ echo
 echo -n "${RED}Install VSCode Extensions? ${NC}[y/N]"
 read REPLY
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-  code --install-extension esbenp.prettier-vscode
-  code --install-extension GitHub.copilot
-  code --install-extension dsznajder.es7-react-js-snippets
-  code --install-extension ritwickdey.liveserver
-  code --install-extension github.vscode-pull-request-github
-  code --install-extension sourcegraph.cody-ai
-  code --install-extension eamodio.gitlens
-  code --install-extension meshintelligenttechnologiesinc.pieces-vscode
-#auto rename
-#auto closE?
-#color brackets
-#html?
-#typescript?
-#typescript react?
-#other intellisenses?
+  # Install VS Code extensions from config.sh file
+  for extension in "${VSCODE[@]}"; do
+    eval "code --install-extension $extension"
+  done
 fi
 
-# MAS
+# App Store
 echo
 echo -n "${RED}Do you want to install Pages, Numbers & Trello from App Store? ${NC}[y/N]"
 read REPLY
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   brew install mas
-  mas install 409201541
-  mas install 409203825
-  mas install 1278508951
+  for app in "${APPSTORE[@]}"; do
+    eval "mas install $app"
+  done
 fi
 
 # ohmyzsh

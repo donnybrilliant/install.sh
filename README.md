@@ -13,7 +13,8 @@ Are you tired of setting up your Mac from scratch after a format? Do you dread t
 ## Usage
 
 Clone this repository to your local machine.
-Modify CASKS, FORMULAE & NPMPACKAGES in the install.sh file to select the software you want to install.
+Modify CASKS, FORMULAE & NPMPACKAGES, VSCODE, APPSTORE in the config file to select the software you want to install.
+Change the settings you want to apply.
 Run the install.sh script in your terminal:
 
 ```
@@ -28,7 +29,6 @@ It is what i need for my MBP M1.
 
 ### To do:
 
-- Create universal config file
 - Create brewfile instead?
 - Change prompts - they are too random now.
 - Game dev package, web dev package etc as prompts instead?
