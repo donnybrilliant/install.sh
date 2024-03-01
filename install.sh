@@ -1,4 +1,12 @@
 #!/bin/zsh
+# ==============================================================================
+# Title: install.sh
+# Author: Daniel Vier
+# Email: daniel.vier@gmail.com
+# Description: Automates the setup and configuration of macOS, including
+#              installation of essential applications and system preferences.
+# Last Updated: March 1, 2024
+# ==============================================================================
 
 source ./config
 
@@ -7,9 +15,10 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
 
-###########################################
-# Start
-##########################################
+#########
+# Start #
+#########
+
 clear
 echo " _           _        _ _       _     "
 echo "(_)         | |      | | |     | |    "
@@ -24,7 +33,7 @@ echo Enter root password
 # Ask for the administrator password upfront.
 sudo -v
 
-# Keep Sudo Until Script is finished
+# Keep Sudo until script is finished
 while true; do
   sudo -n true
   sleep 60
@@ -37,7 +46,7 @@ echo "${GREEN}Looking for updates.."
 echo
 sudo softwareupdate -i -a
 
-# Homebrew
+# Install Homebrew
 echo
 echo "${GREEN}Installing Homebrew"
 echo
@@ -48,13 +57,14 @@ echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >>${HOME}/.zprofile
 # Immediately evaluate the Homebrew environment settings for the current session
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# Update, upgrade and clean
+# Check installation and update
 echo
-echo "${GREEN}Cleaning up.."
+echo "${GREEN}Checking installation.."
 echo
-brew update && brew upgrade && brew cleanup && brew doctor
+brew update && brew doctor
+export HOMEBREW_NO_INSTALL_CLEANUP=1
 
-# Install essentials
+# Install Casks and Formulae
 echo
 echo "${GREEN}Installing formulae..."
 brew install ${FORMULAE[@]}
@@ -62,11 +72,11 @@ echo
 echo "${GREEN}Installing casks..."
 brew install --cask ${CASKS[@]}
 
-# Install Node
+# Install Node.js
 echo
-echo -n "${RED}Install Node via NVM or Brew? ${NC}[N/b]"
+echo -n "${RED}Install Node.js via NVM or Brew? ${NC}[N/b]"
 read REPLY
-if [[ $REPLY =~ ^[Nn]$ ]]; then
+if [[ -z $REPLY || $REPLY =~ ^[Nn]$ ]]; then
   echo "${GREEN}Installing NVM..."
   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 
@@ -87,6 +97,7 @@ if [[ $REPLY =~ ^[Bb]$ ]]; then
 
 fi
 
+# Install NPM Packages
 echo
 echo "${GREEN}Installing Global NPM Packages..."
 npm install -g ${NPMPACKAGES[@]}
@@ -109,15 +120,22 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 fi
 
 echo
-echo -n "${RED}Install Databases? ${NC}[y/N]"
+echo -n "${RED}Install PosreSQL, MySQL & MongoDB? ${NC}[y/N]"
 read REPLY
 if [[ $REPLY =~ ^[Yy]$ ]]; then
+  # Postgres
   brew install postgresql
-
+  # MySQL
   brew install mysql
-  brew services restart mysql
-  mysql_secure_installation
-
+  echo -n "${RED}Set up MySQL now? ${NC}[y/N]"
+  read REPLY
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    echo "${GREEN}Starting MySQL..."
+    brew services start mysql
+    sleep 2
+    mysql_secure_installation
+  fi
+  # MongoDB
   brew tap mongodb/brew
   brew install mongodb-community
 fi
@@ -136,6 +154,13 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
   brew install unity-hub
 fi
 
+echo
+echo -n "${RED}Install Figma? ${NC}[y/N]"
+read REPLY
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+  brew install figma
+fi
+
 # Cleanup
 echo
 echo "${GREEN}Cleaning up..."
@@ -148,9 +173,8 @@ brew autoupdate start $HOMEBREW_UPDATE_FREQUENCY --upgrade --cleanup --immediate
 echo
 echo -n "${RED}Configure default system settings? ${NC}[Y/n]"
 read REPLY
-if [[ $REPLY =~ ^[Yy]$ ]]; then
+if [[ -z $REPLY || $REPLY =~ ^[Yy]$ ]]; then
   echo "${GREEN}Configuring default settings..."
-  # Apply settings from config.sh file
   for setting in "${SETTINGS[@]}"; do
     eval $setting
   done
@@ -161,15 +185,25 @@ echo
 echo -n "${RED}Apply Dock settings?? ${NC}[y/N]"
 read REPLY
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-  # Apply dock settings from config.sh file
-  for app in "${DOCK[@]}"; do
-    eval "dockutil --add $app"
+  brew install dockutil
+  # Handle replacements
+  for item in "${DOCK_REPLACE[@]}"; do
+    IFS="|" read -r add_app replace_app <<<"$item"
+    dockutil --add "$add_app" --replacing "$replace_app" &>/dev/null
+  done
+  # Handle additions
+  for app in "${DOCK_ADD[@]}"; do
+    dockutil --add "$app" &>/dev/null
+  done
+  # Handle removals
+  for app in "${DOCK_REMOVE[@]}"; do
+    dockutil --remove "$app" &>/dev/null
   done
 fi
 
 # Git Login
 echo
-echo "${GREEN}GIT LOGIN"
+echo "${GREEN}SET UP GIT"
 echo
 
 echo "${RED}Please enter your git username:${NC}"
@@ -191,13 +225,13 @@ read REPLY
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   # Install VS Code extensions from config.sh file
   for extension in "${VSCODE[@]}"; do
-    eval "code --install-extension $extension"
+    code --install-extension "$extension"
   done
 fi
 
 # App Store
 echo
-echo -n "${RED}Do you want to install Pages, Numbers & Trello from App Store? ${NC}[y/N]"
+echo -n "${RED}Install apps from App Store? ${NC}[y/N]"
 read REPLY
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   brew install mas

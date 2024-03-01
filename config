@@ -1,5 +1,9 @@
-#CONFIGURATION
+#################
+# CONFIGURATION #
+#################
 
+# Homebrew Casks: Applications installed via Homebrew Cask.
+# These are GUI applications available through Homebrew.
 CASKS=(
   iterm2
   google-chrome
@@ -27,6 +31,7 @@ CASKS=(
   arduino-ide
 )
 
+# Homebrew Formulae: Command line tools installed via Homebrew.
 FORMULAE=(
   speedtest-cli
   tree
@@ -36,10 +41,13 @@ FORMULAE=(
   pinentry-mac
 )
 
+# NPM Packages: Global Node packages to be installed via NPM.
 NPMPACKAGES=(
   express
 )
 
+# VSCode Extensions: Specifies the IDs of Visual Studio Code extensions to install.
+# Each ID corresponds to an extension on the Visual Studio Code Marketplace.
 VSCODE=(
   "esbenp.prettier-vscode"
   "GitHub.copilot"
@@ -49,21 +57,18 @@ VSCODE=(
   "sourcegraph.cody-ai"
   "eamodio.gitlens"
   "meshintelligenttechnologiesinc.pieces-vscode"
-  #auto rename
-  #auto closE?
-  #color brackets
-  #html?
-  #typescript?
-  #typescript react?
-  #other intellisenses?
+  "foxundermoon.shell-format"
 )
 
+# App Store Apps: List of App Store app IDs to install via `mas` (Mac App Store CLI).
+# Each number corresponds to an application's ID in the App Store.
 APPSTORE=(
   409201541  # Pages
   409203825  # Numbers
   1278508951 # Trello
 )
 
+# SYSTEM SETTINGS: Commands to configure macOS system preferences and behaviors.
 SETTINGS=(
   # Sets the mouse speed to 3
   "defaults write -g com.apple.mouse.scaling 3"
@@ -91,23 +96,32 @@ SETTINGS=(
   "chflags nohidden ~/Library"
 )
 
-DOCK=(
-  "--add /Applications/Google\ Chrome.app --replacing 'Safari' &&"
-  "--add /Applications/iTerm.app &&"
-  "--add /Applications/Visual\ Studio\ Code.app &&"
-  "--add /Applications/GitHub\ Desktop.app &&"
-  "--add /Applications/Spotify.app &&"
-  "--add /Applications/Discord.app &&"
-  "--add /Applications/Microsoft\ Teams\ \(work\ or\ school\).app &&"
-  "--remove 'Meldinger' &&"
-  "--remove 'Kart' &&"
-  "--remove 'Bilder' &&"
-  "--remove 'Påminnelser' &&"
-  "--remove 'FaceTime' &&"
-  "--remove 'Kontakter' &&"
-  "--remove 'TV' &&"
-  "--remove 'Musikk' &&"
-  "--remove 'Mail'"
+# DOCK SETTINGS: Configuration for adding, removing, and replacing Dock items.
+DOCK_REPLACE=(
+  # Format: "replacement_app_path|app_name_to_replace"
+  "/Applications/Google Chrome.app|Safari"
 )
 
-HOMEBREW_UPDATE_FREQUENCY=86400
+DOCK_ADD=(
+  "/Applications/iTerm.app"
+  "/Applications/Visual Studio Code.app"
+  "/Applications/GitHub Desktop.app"
+  "/Applications/Spotify.app"
+  "/Applications/Discord.app"
+  "/Applications/Microsoft Teams (work or school).app"
+)
+DOCK_REMOVE=(
+  "Meldinger"
+  "Kart"
+  "Bilder"
+  "Påminnelser"
+  "FaceTime"
+  "Kontakter"
+  "TV"
+  "Musikk"
+  "Mail"
+)
+
+
+# HOMEBREW AUTOUPDATE: Configures the frequency of Homebrew package updates in milliseconds.
+HOMEBREW_UPDATE_FREQUENCY=86400 # 24 hours in milliseconds
