@@ -46,6 +46,9 @@ echo "${GREEN}Looking for updates.."
 echo
 sudo softwareupdate -i -a
 
+# Install Rosetta
+sudo softwareupdate --install-rosetta --agree-to-license
+
 # Install Homebrew
 echo
 echo "${GREEN}Installing Homebrew"
@@ -165,7 +168,7 @@ fi
 echo
 echo "${GREEN}Cleaning up..."
 brew update && brew upgrade && brew cleanup && brew doctor
-mkdir -p /Users/daniel/Library/LaunchAgents
+mkdir -p ~/Library/LaunchAgents
 brew tap homebrew/autoupdate
 brew autoupdate start $HOMEBREW_UPDATE_FREQUENCY --upgrade --cleanup --immediate --sudo
 
