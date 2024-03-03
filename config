@@ -29,6 +29,9 @@ CASKS=(
   zenmap
   tiled
   arduino-ide
+  transmission
+  python
+  python-tk
 )
 
 # Homebrew Formulae: Command line tools installed via Homebrew.
@@ -92,6 +95,13 @@ SETTINGS=(
   "defaults write com.apple.Finder FXPreferredViewStyle Nlsv"
   # Makes Finder sort folders before files
   "defaults write com.apple.finder _FXSortFoldersFirst -bool true"
+  # Stops Photos from opening automatically when devices are plugged in
+  "defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true" # does this work?
+  # Dont create .DS_Store Files On Network Or USB Volumes
+  "defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true"
+  "defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true"
+  # Disable the warning when changing a file extension
+  "defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false"
   # Makes the Library folder visible in Finder
   "chflags nohidden ~/Library"
 )
@@ -121,7 +131,6 @@ DOCK_REMOVE=(
   "Musikk"
   "Mail"
 )
-
 
 # HOMEBREW AUTOUPDATE: Configures the frequency of Homebrew package updates in milliseconds.
 HOMEBREW_UPDATE_FREQUENCY=86400 # 24 hours in milliseconds
