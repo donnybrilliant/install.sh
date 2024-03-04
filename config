@@ -30,8 +30,6 @@ CASKS=(
   tiled
   arduino-ide
   transmission
-  python
-  python-tk
 )
 
 # Homebrew Formulae: Command line tools installed via Homebrew.
@@ -42,6 +40,8 @@ FORMULAE=(
   wget
   git
   pinentry-mac
+  python
+  python-tk
 )
 
 # NPM Packages: Global Node packages to be installed via NPM.
