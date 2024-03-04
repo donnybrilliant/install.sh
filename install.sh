@@ -53,7 +53,7 @@ sudo softwareupdate --install-rosetta --agree-to-license
 echo
 echo "${GREEN}Installing Homebrew"
 echo
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 # Append Homebrew initialization to .zprofile
 echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >>${HOME}/.zprofile
@@ -70,10 +70,20 @@ export HOMEBREW_NO_INSTALL_CLEANUP=1
 # Install Casks and Formulae
 echo
 echo "${GREEN}Installing formulae..."
-brew install ${FORMULAE[@]}
-echo
+for formula in "${FORMULAE[@]}"; do
+  brew install "$formula"
+  if [ $? -ne 0 ]; then
+    echo "${RED}Failed to install $formula. Continuing...${NC}"
+  fi
+done
+
 echo "${GREEN}Installing casks..."
-brew install --cask ${CASKS[@]}
+for cask in "${CASKS[@]}"; do
+  brew install --cask "$cask"
+  if [ $? -ne 0 ]; then
+    echo "${RED}Failed to install $cask. Continuing...${NC}"
+  fi
+done
 
 # Install Node.js
 echo
