@@ -67,23 +67,55 @@ echo
 brew update && brew doctor
 export HOMEBREW_NO_INSTALL_CLEANUP=1
 
-# Install Casks and Formulae
-echo
-echo "${GREEN}Installing formulae..."
-for formula in "${FORMULAE[@]}"; do
-  brew install "$formula"
-  if [ $? -ne 0 ]; then
-    echo "${RED}Failed to install $formula. Continuing...${NC}"
-  fi
-done
+# Check for Brewfile in the current directory and use it if present
+if [ -f "./Brewfile" ]; then
+  echo
+  echo "${GREEN}Brewfile found. Using it to install packages..."
+  brew bundle
+  echo "${GREEN}Installation from Brewfile complete."
+else
+  # If no Brewfile is present, continue with the default installation
 
-echo "${GREEN}Installing casks..."
-for cask in "${CASKS[@]}"; do
-  brew install --cask "$cask"
-  if [ $? -ne 0 ]; then
-    echo "${RED}Failed to install $cask. Continuing...${NC}"
+  # Install Casks and Formulae
+  echo
+  echo "${GREEN}Installing formulae..."
+  for formula in "${FORMULAE[@]}"; do
+    brew install "$formula"
+    if [ $? -ne 0 ]; then
+      echo "${RED}Failed to install $formula. Continuing...${NC}"
+    fi
+  done
+
+  echo "${GREEN}Installing casks..."
+  for cask in "${CASKS[@]}"; do
+    brew install --cask "$cask"
+    if [ $? -ne 0 ]; then
+      echo "${RED}Failed to install $cask. Continuing...${NC}"
+    fi
+  done
+
+  # App Store
+  echo
+  echo -n "${RED}Install apps from App Store? ${NC}[y/N]"
+  read REPLY
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    brew install mas
+    for app in "${APPSTORE[@]}"; do
+      eval "mas install $app"
+    done
   fi
-done
+
+  # VS Code Extensions
+  echo
+  echo -n "${RED}Install VSCode Extensions? ${NC}[y/N]"
+  read REPLY
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    # Install VS Code extensions from config.sh file
+    for extension in "${VSCODE[@]}"; do
+      code --install-extension "$extension"
+    done
+  fi
+fi
 
 # Install Node.js
 echo
@@ -230,28 +262,6 @@ git config --global color.ui true
 
 echo
 echo "${GREEN}GITTY UP!"
-
-# VS Code Extensions
-echo
-echo -n "${RED}Install VSCode Extensions? ${NC}[y/N]"
-read REPLY
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-  # Install VS Code extensions from config.sh file
-  for extension in "${VSCODE[@]}"; do
-    code --install-extension "$extension"
-  done
-fi
-
-# App Store
-echo
-echo -n "${RED}Install apps from App Store? ${NC}[y/N]"
-read REPLY
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-  brew install mas
-  for app in "${APPSTORE[@]}"; do
-    eval "mas install $app"
-  done
-fi
 
 # ohmyzsh
 echo

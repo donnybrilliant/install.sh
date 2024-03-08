@@ -5,6 +5,7 @@ Welcome to the ultimate macOS setup script! Are you tired of the tedious process
 ## Features
 
 - **Automated Installation:** Say goodbye to manually installing your favorite software and tools. This script automates the process, making your setup hassle-free.
+- **Brewfile Detection:** If you have a Brewfile present in the same folder as `install.sh` it will use that instead of the `config`file.
 - **Customizable Configuration:** Tailor the setup to your needs with a customizable configuration file. Choose the software and settings you want with ease.
 - **Comprehensive Setup:** From updating macOS, installing Homebrew and essential software, to configuring system preferences and Dock settings, this script covers all bases to get your macOS ready for use.
 - **No External Dependencies:** The script runs without the need for any external dependencies, ensuring a smooth setup process.
@@ -35,6 +36,10 @@ The script performs a variety of tasks to prepare a macOS machine for use:
 - Adjust `CASKS`, `FORMULAE`, `NPMPACKAGES`, `VSCODE`, and `APPSTORE` sections to select the software you wish to install.
 - Change the `SETTINGS` to choose system settings or `DOCK-*` to choose dock setup.
 
+- **Optional: Add a `Brewfile`:**
+  - Add a Brewfile to the same directory as `install.sh` and it will run instead of the selected packages in `config`.
+    (Note that `SETTINGS` will still be applied from `config`)
+
 3. **Run the Script:** Open Terminal, navigate to the cloned directory, and execute:
 
 ```
@@ -45,7 +50,7 @@ Follow any on-screen prompts to customize your installation further.
 
 ## To Do and Feature Ideas
 
-- **Brewfile Integration:** Add option to use Brewfile if one is present.
+- **Error Handling:** Now only takes in to account a user who runs it for the first time.
 - **Improve Prompts:** Refine the prompts for a more intuitive setup experience.
 - **Specialized Packages:** Add options for game development, web development packages, etc.
 - **Configuration files:** Settings for Apps, Workflows etc.
